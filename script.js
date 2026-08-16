@@ -2,9 +2,11 @@ const form = document.getElementById('reg-form');
 const filenameInput = document.getElementById('filename');
 const policyList = document.getElementById('policy-list');
 const statusText = document.getElementById('status');
+const submitButton = form.querySelector('button[type="submit"]');
 
 const EDGE_POLICY_REGISTRY_PATH = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Edge';
-const EDGE_POLICIES = [
+const POLICY_DATA_URL = './policies.json';
+const FALLBACK_POLICIES = [
   {
     key: 'HomepageLocation',
     label: 'Homepage URL',
@@ -133,6 +135,7 @@ const EDGE_POLICIES = [
     ],
   },
 ];
+let edgePolicies = [];
 
 function ensureRegExtension(name) {
   return name.toLowerCase().endsWith('.reg') ? name : `${name}.reg`;
@@ -214,8 +217,9 @@ function renderPolicyField(policy) {
   return wrapper;
 }
 
-function buildPolicyList() {
-  for (const policy of EDGE_POLICIES) {
+function buildPolicyList(policies) {
+  policyList.innerHTML = '';
+  for (const policy of policies) {
     policyList.appendChild(renderPolicyField(policy));
   }
 }
@@ -290,7 +294,36 @@ function toUtf16LeWithBom(text) {
   return bytes;
 }
 
-buildPolicyList();
+async function loadPolicies() {
+  submitButton.disabled = true;
+  statusText.textContent = 'Loading Microsoft Edge policies...';
+
+  try {
+    const response = await fetch(POLICY_DATA_URL, { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const policies = await response.json();
+    if (!Array.isArray(policies) || policies.length === 0) {
+      throw new Error('Policy list was empty.');
+    }
+
+    edgePolicies = policies;
+  } catch (error) {
+    edgePolicies = FALLBACK_POLICIES;
+    statusText.textContent = 'Could not load the full policy catalog. Using fallback policies.';
+  }
+
+  buildPolicyList(edgePolicies);
+  submitButton.disabled = false;
+
+  if (edgePolicies.length > FALLBACK_POLICIES.length) {
+    statusText.textContent = `Loaded ${edgePolicies.length} Microsoft Edge policies.`;
+  }
+}
+
+loadPolicies();
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
