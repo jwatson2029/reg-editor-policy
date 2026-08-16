@@ -1,16 +1,19 @@
 # reg-editor-policy
 
-A simple browser app to create and export Windows Registry (`.reg`) files.
+A browser app to create and export Windows Registry (`.reg`) files for Microsoft Edge policies.
 
 ## Use locally
 
 1. Open `/home/runner/work/reg-editor-policy/reg-editor-policy/index.html` in a browser.
-2. Enter a filename and registry content.
-3. Click **Export .reg file** to download your `.reg` file.
+2. Enter a filename.
+3. Select the Microsoft Edge policies you want to configure.
+4. Set values for each selected policy.
+5. Click **Export .reg file** to download your `.reg` file.
 
 The app ensures:
 - `.reg` extension is present
 - `Windows Registry Editor Version 5.00` header is included
+- selected Edge policies are exported under `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge`
 
 ## GitHub Pages deployment
 

@@ -15,15 +15,11 @@
         <label for="filename">File name</label>
         <input id="filename" type="text" value="policy.reg" required />
 
-        <label for="reg-content">Registry content</label>
-        <textarea
-          id="reg-content"
-          rows="14"
-          required
-        >Windows Registry Editor Version 5.00
-
-[HKEY_CURRENT_USER\Software\Policies\Example]
-"Enabled"=dword:00000001</textarea>
+        <section class="policy-section" aria-labelledby="policy-title">
+          <h2 id="policy-title">Microsoft Edge policies</h2>
+          <p>Select the policies you want to include in the exported registry file.</p>
+          <div id="policy-list" class="policy-list" role="group" aria-labelledby="policy-title"></div>
+        </section>
 
         <button type="submit">Export .reg file</button>
       </form>
