@@ -2,6 +2,9 @@
 
 A browser app to create and export Windows Registry (`.reg`) files for Microsoft Edge policies.
 
+The policy catalog is loaded from `policies.json`, which is generated from the official Microsoft Edge policy reference at:
+`https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies`.
+
 ## Use locally
 
 1. Open `/home/runner/work/reg-editor-policy/reg-editor-policy/index.html` in a browser.
